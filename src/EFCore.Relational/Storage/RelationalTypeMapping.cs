@@ -270,7 +270,7 @@ namespace Microsoft.EntityFrameworkCore.Storage
             : base(parameters.CoreParameters)
         {
             Parameters = parameters;
-            PrecisionAndScaleOverriden = parameters.PrecisionAndScaleOverriden;
+            _precisionAndScaleOverriden = parameters.PrecisionAndScaleOverriden;
 
             var size = parameters.Size;
             var storeType = parameters.StoreType;
@@ -290,7 +290,7 @@ namespace Microsoft.EntityFrameworkCore.Storage
                     var converter = parameters.CoreParameters.Converter;
                     // Fallback to 2.1 behavior
                     // #12405
-                    var oldBehavior = !PrecisionAndScaleOverriden;
+                    var oldBehavior = !_precisionAndScaleOverriden;
                     if (oldBehavior)
                     {
                         precision = converter?.MappingHints?.Precision;
@@ -404,7 +404,7 @@ namespace Microsoft.EntityFrameworkCore.Storage
                     && (StoreTypePostfix == StoreTypePostfix.PrecisionAndScale
                         || StoreTypePostfix == StoreTypePostfix.Precision)))
             {
-                var oldBehavior = !PrecisionAndScaleOverriden;
+                var oldBehavior = !_precisionAndScaleOverriden;
                 if (!oldBehavior)
                 {
                     var storeTypeChanged = mappingInfo.StoreTypeNameBase != null
@@ -482,7 +482,7 @@ namespace Microsoft.EntityFrameworkCore.Storage
         /// </summary>
         public virtual bool IsFixedLength => Parameters.FixedLength;
 
-        private bool PrecisionAndScaleOverriden { get; }
+        private readonly bool _precisionAndScaleOverriden;
 
         /// <summary>
         ///     Gets the string format to be used to generate SQL literals of this type.
